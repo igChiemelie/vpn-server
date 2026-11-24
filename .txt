@@ -1,0 +1,30 @@
+Step-by-Step: Run a WireGuard Server on GitHub Actions (No VPS)
+Here is the practical setup based on the project's instructions:
+
+1. Fork the Repository
+Go to github.com/valdikss/nat-traversal-github-actions-openvpn-wireguard and fork it to your own GitHub account.
+
+2. Add Your SSH Public Key
+You need SSH access to the runner while the job is active. Clone your fork locally, open the authorized_keys file, paste your SSH public key into it, and commit the change.
+
+3. Prepare Your Local Machine
+You need a Linux machine (or WSL) with stun-client and wireguard-tools installed:
+
+bash
+sudo apt install stun-client wireguard-tools
+4. Run the Local Script
+From your cloned fork, run:
+
+bash
+./run.sh wireguard
+This script does two things: it triggers the GitHub Actions job (which starts the WireGuard server on the runner) and it performs the NAT hole-punching from your side.
+
+5. Get Your VPN Configuration
+Go to the Actions tab of your forked repository on GitHub. Open the running job and look for the step that prints the WireGuard configuration file. Copy that configuration.
+
+6. Connect
+Save the configuration as wg0.conf on your local machine and bring the tunnel up:
+
+bash
+sudo wg-quick up ./wg0.conf
+You are now connected to a VPN whose exit IP is the GitHub Actions runner's datacenter IP.
